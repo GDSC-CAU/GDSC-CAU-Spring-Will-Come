@@ -23,12 +23,15 @@ public class User {
     private int gender;
     private int age;
 
-    @Builder
-    public User(String name, int height, int weight, int gender, int age) {
+    private User(String name, int height, int weight, int gender, int age) {
         this.name = name;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
         this.age = age;
+    }
+
+    public static User createUser(String name, int height, int weight, int gender, int age) {
+        return new User(name, height, weight, gender, age);
     }
 }

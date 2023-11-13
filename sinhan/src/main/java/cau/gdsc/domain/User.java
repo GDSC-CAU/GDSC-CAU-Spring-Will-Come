@@ -31,6 +31,7 @@ public class User {
         this.age = age;
     }
 
+    // 정적 팩토리 메서드
     public static User createUser(String name, int height, int weight, int gender, int age) {
         return new User(name, height, weight, gender, age);
     }

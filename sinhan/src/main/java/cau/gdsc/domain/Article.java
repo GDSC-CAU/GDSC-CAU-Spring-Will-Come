@@ -1,5 +1,6 @@
 package cau.gdsc.domain;
 
+import cau.gdsc.dto.ArticleReqDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,13 +30,11 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private Article(String title, String content, User user) {
-        this.title = title;
-        this.content = content;
-        this.user = user;
-    }
-
-    public static Article createArticle(String title, String content, User user) {
-        return new Article(title, content, user);
+    public static Article createArticle(ArticleReqDto articleReqDto) {
+        Article article = new Article();
+        article.id = articleReqDto.getId();
+        article.title = articleReqDto.getTitle();
+        article.content = articleReqDto.getContent();
+        return article;
     }
 }

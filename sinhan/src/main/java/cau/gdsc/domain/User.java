@@ -23,16 +23,14 @@ public class User {
     private int gender;
     private int age;
 
-    private User(String name, int height, int weight, int gender, int age) {
-        this.name = name;
-        this.height = height;
-        this.weight = weight;
-        this.gender = gender;
-        this.age = age;
-    }
-
     // 정적 팩토리 메서드
     public static User createUser(String name, int height, int weight, int gender, int age) {
-        return new User(name, height, weight, gender, age);
+        User user = new User();
+        user.name = name;
+        user.height = height;
+        user.weight = weight;
+        user.gender = gender;
+        user.age = age;
+        return user;
     }
 }

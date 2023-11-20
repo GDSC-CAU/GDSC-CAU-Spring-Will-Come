@@ -1,9 +1,7 @@
 package cau.gdsc.domain;
 
 import cau.gdsc.dto.ArticleReqDto;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +9,9 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor // Builder 사용을 위해 추가
 @Table(name = "article")
+@Builder
 public class Article {
 
     @Id

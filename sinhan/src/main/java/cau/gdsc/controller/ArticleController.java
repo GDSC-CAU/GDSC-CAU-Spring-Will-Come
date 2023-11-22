@@ -1,5 +1,6 @@
 package cau.gdsc.controller;
 
+import cau.gdsc.config.api.ApiResponse;
 import cau.gdsc.domain.Article;
 import cau.gdsc.dto.ArticleReqDto;
 import cau.gdsc.service.ArticleService;
@@ -22,13 +23,13 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<Article>> getArticles() {
-        return new ResponseEntity<>(articleService.getArticles(), HttpStatus.OK);
+    public ApiResponse<List<Article>> getArticles() {
+        return ApiResponse.success(articleService.getArticles());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Article> getArticleById(@PathVariable Long id){
-        return new ResponseEntity<>(articleService.getArticleById(id), HttpStatus.OK);
+    public ApiResponse<Article> getArticleById(@PathVariable Long id){
+        return ApiResponse.success(articleService.getArticleById(id));
     }
 
     @PostMapping("/")

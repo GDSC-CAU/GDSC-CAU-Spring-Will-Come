@@ -30,11 +30,7 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Article createArticle(ArticleReqDto articleReqDto) {
-        Article article = new Article();
-        article.id = articleReqDto.getId();
-        article.title = articleReqDto.getTitle();
-        article.content = articleReqDto.getContent();
-        return article;
+    public static Article createArticle(Long id, String title, String content) {
+        return Article.builder().id(id).title(title).content(content).build();
     }
 }

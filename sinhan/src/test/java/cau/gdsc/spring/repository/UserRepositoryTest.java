@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DataJpaTest
-@ActiveProfiles("test")
+@DataJpaTest // jpa 관련 테스트: Jpa 관련 컴포넌트만
+@ActiveProfiles("test") // application의 test 프로필 사용
 public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;

@@ -1,6 +1,5 @@
 package cau.gdsc.domain;
 
-import cau.gdsc.dto.ArticleReqDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor // Builder 사용을 위해 추가
+@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder 사용을 위해 추가
 @Table(name = "article")
 @Builder
 public class Article {
@@ -21,10 +20,10 @@ public class Article {
     private String title;
     private String content;
     @Column(name = "created_at", insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
     // JPA가 삽입, 갱신을 하지 못하도록 설정, MySQL DDL 설정을 따른다.
     @Column(name = "updated_at", insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -32,5 +32,10 @@ public class User {
         user.gender = gender;
         user.age = age;
         return user;
+    }
+
+    public void update(int height, int weight){
+        this.height = height;
+        this.weight = weight;
     }
 }

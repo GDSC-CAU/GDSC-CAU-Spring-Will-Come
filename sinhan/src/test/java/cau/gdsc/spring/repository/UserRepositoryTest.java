@@ -20,8 +20,8 @@ public class UserRepositoryTest {
 
     @BeforeEach
     void setup(){
-        User user1 = User.createUser("NEW USER", 160, 60, 0, 30);
-        User user2 = User.createUser("SECONDARY", 185, 75, 1, 28);
+        User user1 = User.of("NEW USER", 160, 60, 0, 30);
+        User user2 = User.of("SECONDARY", 185, 75, 1, 28);
         userRepository.saveAll(List.of(user1, user2));
     }
 

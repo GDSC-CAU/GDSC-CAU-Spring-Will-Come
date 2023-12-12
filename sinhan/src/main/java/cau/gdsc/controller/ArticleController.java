@@ -2,7 +2,7 @@ package cau.gdsc.controller;
 
 import cau.gdsc.config.api.ApiResponse;
 import cau.gdsc.domain.Article;
-import cau.gdsc.dto.ArticleReqDto;
+import cau.gdsc.dto.ArticleAddReqDto;
 import cau.gdsc.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,13 +33,13 @@ public class ArticleController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Article> createArticle(@RequestBody ArticleReqDto articleReqDto){
-        return new ResponseEntity<>(articleService.createArticle(articleReqDto), HttpStatus.CREATED);
+    public ResponseEntity<Article> createArticle(@RequestBody ArticleAddReqDto articleAddReqDto){
+        return new ResponseEntity<>(articleService.createArticle(articleAddReqDto), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody ArticleReqDto articleReqDto){
-        return new ResponseEntity<>(articleService.updateArticle(id, articleReqDto), HttpStatus.OK);
+    public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody ArticleAddReqDto articleAddReqDto){
+        return new ResponseEntity<>(articleService.updateArticle(id, articleAddReqDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

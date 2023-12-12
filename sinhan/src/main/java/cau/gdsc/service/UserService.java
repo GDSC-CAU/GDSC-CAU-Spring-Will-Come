@@ -16,15 +16,15 @@ public class UserService {
     private final UserRepository userRepository;
 //    private final UserMapper userMapper;
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    public User getUserById(Long id){
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("No User"));
     }
 
-//    public User registerUser(UserAddReqDto reqDto){
-//
-//    }
+    public User registerUser(UserAddReqDto reqDto) {
+        return userRepository.save(User.of(reqDto.getName(), reqDto.getHeight(), reqDto.getWeight(), reqDto.getGender(), reqDto.getAge()));
+    }
 }

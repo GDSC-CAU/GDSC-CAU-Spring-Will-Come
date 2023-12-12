@@ -3,7 +3,7 @@ package cau.gdsc.service;
 import cau.gdsc.config.api.ResponseCode;
 import cau.gdsc.config.exception.BaseException;
 import cau.gdsc.domain.Article;
-import cau.gdsc.dto.ArticleReqDto;
+import cau.gdsc.dto.ArticleAddReqDto;
 import cau.gdsc.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,13 +27,13 @@ public class ArticleService {
         return articleRepository.findById(id).orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND));
     }
 
-    public Article createArticle(ArticleReqDto articleReqDto) {
-        return articleRepository.save(Article.createArticle(articleReqDto.getId(), articleReqDto.getTitle(), articleReqDto.getContent()));
+    public Article createArticle(ArticleAddReqDto articleAddReqDto) {
+        return articleRepository.save(Article.createArticle(articleAddReqDto.getTitle(), articleAddReqDto.getContent()));
     }
 
-    public Article updateArticle(Long id, ArticleReqDto articleReqDto) {
+    public Article updateArticle(Long id, ArticleAddReqDto articleAddReqDto) {
         Article article = getArticleById(id); // 존재 확인
-        Article updatedArticle = Article.builder().id(id).title(articleReqDto.getTitle()).content(articleReqDto.getContent()).build();
+        Article updatedArticle = Article.builder().id(id).title(articleAddReqDto.getTitle()).content(articleAddReqDto.getContent()).build();
         return articleRepository.save(updatedArticle);
     }
 

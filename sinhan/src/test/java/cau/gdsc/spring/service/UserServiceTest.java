@@ -1,10 +1,9 @@
 package cau.gdsc.spring.service;
 
 import cau.gdsc.domain.User;
+import cau.gdsc.dto.UserAddReqDto;
 import cau.gdsc.repository.UserRepository;
 import cau.gdsc.service.UserService;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class) // 스프링 컨테이너 로드없이 테스트. 빈 객체 주입을 별도 진행해야한다.
@@ -40,8 +38,8 @@ public class UserServiceTest {
 
     @BeforeEach
     void setup() {
-        user1 = User.createUser("NEW USER", 160, 60, 0, 30);
-        user2 = User.createUser("SECONDARY", 185, 75, 1, 28);
+        user1 = User.of("NEW USER", 160, 60, 0, 30);
+        user2 = User.of("SECONDARY", 185, 75, 1, 28);
 
         // ID에 대한 setter가 없는 엔티티의 필드를 수정하는 방법
         ReflectionTestUtils.setField(user1, "id", 1L);
@@ -80,9 +78,13 @@ public class UserServiceTest {
                 .hasMessageContaining("No User");
     }
 
-//    @Test
-//    @DisplayName(value = "사용자 등록")
-//    void registerUser(){
-//        when(userRepository.save(user1)).thenReturn(user1);
-//    }
+    @Test
+    @DisplayName(value = "사용자 등록")
+    void registerUser(){
+        UserAddReqDto reqDto = new UserAddReqDto();
+        when(userRepository.save(user1)).thenReturn(user1);
+        User.builder().
+        User newUser = userService.registerUser(user1);
+
+    }
 }

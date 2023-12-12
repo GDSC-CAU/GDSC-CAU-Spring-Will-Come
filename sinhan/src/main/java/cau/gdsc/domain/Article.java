@@ -1,6 +1,7 @@
 package cau.gdsc.domain;
 
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder 사용을 위해 추가
 @Table(name = "article")
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Article {
 
     @Id
@@ -29,7 +31,7 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Article createArticle(Long id, String title, String content) {
-        return Article.builder().id(id).title(title).content(content).build();
+    public static Article createArticle(String title, String content) {
+        return Article.builder().title(title).content(content).build();
     }
 }

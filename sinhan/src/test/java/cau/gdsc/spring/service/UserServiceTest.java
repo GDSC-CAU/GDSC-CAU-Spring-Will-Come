@@ -2,6 +2,7 @@ package cau.gdsc.spring.service;
 
 import cau.gdsc.domain.User;
 import cau.gdsc.dto.UserAddReqDto;
+import cau.gdsc.dto.UserUpdateReqDto;
 import cau.gdsc.repository.UserRepository;
 import cau.gdsc.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class) // 스프링 컨테이너 로드없이 테스트. 빈 객체 주입을 별도 진행해야한다.
 @ActiveProfiles("test")
@@ -38,13 +41,13 @@ public class UserServiceTest {
 
     @BeforeEach
     void setup() {
-        user1 = User.of("NEW USER", 160, 60, 0, 30);
-        user2 = User.of("SECONDARY", 185, 75, 1, 28);
+        user1 = User.builder().name("NEW USER").height(160).weight(60).gender(0).age(30).build();
+        user2 = User.builder().name("SECONDARY").height(185).weight(75).gender(1).age(28).build();
 
         // ID에 대한 setter가 없는 엔티티의 필드를 수정하는 방법
         ReflectionTestUtils.setField(user1, "id", 1L);
         ReflectionTestUtils.setField(user2, "id", 2L);
-        users = List.of(user1, user2);
+        users = List.of(user1, user2); // list all test
     }
 
     @Test
@@ -81,10 +84,36 @@ public class UserServiceTest {
     @Test
     @DisplayName(value = "사용자 등록")
     void registerUser(){
-        UserAddReqDto reqDto = new UserAddReqDto();
-        when(userRepository.save(user1)).thenReturn(user1);
-        User.builder().
-        User newUser = userService.registerUser(user1);
+        UserAddReqDto reqDto = new UserAddReqDto("NEW USER", 160, 60, 0, 30);
+        when(userRepository.save(any(User.class))).thenReturn(user1);
 
+        User createdUser = userService.registerUser(reqDto);
+
+        assertThat(createdUser).isNotNull();
+        assertThat(createdUser.getName()).isEqualTo(user1.getName());
+    }
+
+    @Test
+    @DisplayName(value = "사용자 정보 변경")
+    void updateUser(){
+        UserUpdateReqDto reqDto = new UserUpdateReqDto(163, 65);
+        when(userRepository.findById(anyLong())).thenReturn((Optional.of(user1)));
+
+        User updatedUser = userService.updateUser(user1.getId(), reqDto);
+
+        assertThat(updatedUser.getId()).isEqualTo(user1.getId());
+        assertThat(updatedUser.getHeight()).isEqualTo(user1.getHeight());
+        assertThat(updatedUser.getWeight()).isEqualTo(user1.getWeight());
+    }
+
+    @Test
+    @DisplayName(value = "사용자 삭제")
+    void deleteUser(){
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user1));
+        doNothing().when(userRepository).delete(any(User.class));
+
+        userService.deleteUser(user1.getId());
+
+        verify(userRepository, times(1)).delete(user1); // delete가 1번 호출 됐는지 검증
     }
 }

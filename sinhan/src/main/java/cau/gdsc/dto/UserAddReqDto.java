@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserAddReqDto {
     private String name;
@@ -15,4 +15,14 @@ public class UserAddReqDto {
     private int weight;
     private int gender;
     private int age;
+
+    public User toEntity(){
+        return User.builder()
+                .name(this.name)
+                .height(this.height)
+                .weight(this.weight)
+                .gender(this.gender)
+                .age(this.age)
+                .build();
+    }
 }

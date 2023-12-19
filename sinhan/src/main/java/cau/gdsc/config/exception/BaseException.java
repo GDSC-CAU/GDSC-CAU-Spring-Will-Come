@@ -4,6 +4,7 @@ import cau.gdsc.config.api.ResponseCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+// 기본 예외 처리
 @AllArgsConstructor
 @Getter
 public class BaseException extends RuntimeException{

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// ResponseEntity 기반 커스텀 응답
+// ResponseEntity 응답 정보 형식을 통일하기 위해 정의
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiResponse<T> {

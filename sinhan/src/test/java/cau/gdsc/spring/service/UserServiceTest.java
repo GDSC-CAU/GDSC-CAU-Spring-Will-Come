@@ -1,8 +1,9 @@
 package cau.gdsc.spring.service;
 
 import cau.gdsc.domain.User;
-import cau.gdsc.dto.UserAddReqDto;
-import cau.gdsc.dto.UserUpdateReqDto;
+import cau.gdsc.dto.user.UserAddReqDto;
+import cau.gdsc.dto.user.UserResDto;
+import cau.gdsc.dto.user.UserUpdateReqDto;
 import cau.gdsc.repository.UserRepository;
 import cau.gdsc.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,10 +59,9 @@ public class UserServiceTest {
         // 실제로 데이터를 저장, 조회, 삭제하지 않기 때문에 save를 생략한다.
         when(userRepository.findAll()).thenReturn(users);
 
-        List<User> userList = userService.getUsers();
+        List<UserResDto> userList = userService.getUsers();
 
         assertThat(userList.size()).isEqualTo(users.size());
-        assertThat(userList).contains(user1, user2);
     }
 
     @Test
@@ -70,24 +70,29 @@ public class UserServiceTest {
         // 어떤 Long 값을 넣드
         when(userRepository.findById(user1.getId())).thenReturn(Optional.of(user1));
 
-        User retrievedUser = userService.getUserById(user1.getId());
+        UserResDto retrievedUser = userService.getUserById(user1.getId());
 
         assertThat(retrievedUser).isNotNull();
-        assertThat(retrievedUser.getId()).isEqualTo(user1.getId());
-
+        assertThat(retrievedUser.getName()).isEqualTo(user1.getName());
         // 존재하지 않는 사용자 접근 예외 처리 테스트
         assertThatThrownBy(() -> userService.getUserById(10L))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("No User");
+                .hasMessageContaining("User not found in id: 10");
     }
 
     @Test
     @DisplayName(value = "사용자 등록")
-    void registerUser(){
-        UserAddReqDto reqDto = new UserAddReqDto("NEW USER", 160, 60, 0, 30);
+    void registerUser() {
+        UserAddReqDto reqDto = UserAddReqDto.builder()
+                .name("NEW USER")
+                .height(160)
+                .weight(60)
+                .gender(0)
+                .age(30)
+                .build();
         when(userRepository.save(any(User.class))).thenReturn(user1);
 
-        User createdUser = userService.registerUser(reqDto);
+        UserResDto createdUser = userService.registerUser(reqDto);
 
         assertThat(createdUser).isNotNull();
         assertThat(createdUser.getName()).isEqualTo(user1.getName());
@@ -95,22 +100,24 @@ public class UserServiceTest {
 
     @Test
     @DisplayName(value = "사용자 정보 변경")
-    void updateUser(){
-        UserUpdateReqDto reqDto = new UserUpdateReqDto(163, 65);
+    void updateUser() {
+        UserUpdateReqDto reqDto = UserUpdateReqDto.builder()
+                .height(user1.getHeight() + 5)
+                .weight(user1.getWeight() + 5)
+                .build();
         when(userRepository.findById(anyLong())).thenReturn((Optional.of(user1)));
 
-        User updatedUser = userService.updateUser(user1.getId(), reqDto);
+        UserResDto updatedUser = userService.updateUser(user1.getId(), reqDto);
 
-        assertThat(updatedUser.getId()).isEqualTo(user1.getId());
         assertThat(updatedUser.getHeight()).isEqualTo(user1.getHeight());
         assertThat(updatedUser.getWeight()).isEqualTo(user1.getWeight());
     }
 
     @Test
     @DisplayName(value = "사용자 삭제")
-    void deleteUser(){
+    void deleteUser() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user1));
-        doNothing().when(userRepository).delete(any(User.class));
+        doNothing().when(userRepository).delete(any(User.class)); // Mock 메서드의 반환값이 없을때
 
         userService.deleteUser(user1.getId());
 

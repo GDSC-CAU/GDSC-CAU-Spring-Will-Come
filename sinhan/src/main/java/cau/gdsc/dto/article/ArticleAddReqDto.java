@@ -1,4 +1,4 @@
-package cau.gdsc.dto;
+package cau.gdsc.dto.article;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

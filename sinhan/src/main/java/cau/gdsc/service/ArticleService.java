@@ -3,11 +3,12 @@ package cau.gdsc.service;
 import cau.gdsc.config.api.ResponseCode;
 import cau.gdsc.config.exception.BaseException;
 import cau.gdsc.domain.Article;
-import cau.gdsc.dto.ArticleAddReqDto;
+import cau.gdsc.dto.article.ArticleAddReqDto;
 import cau.gdsc.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -24,7 +25,7 @@ public class ArticleService {
     }
 
     public Article getArticleById(Long id) {
-        return articleRepository.findById(id).orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND));
+        return articleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Article not found with id: " + id));
     }
 
     public Article createArticle(ArticleAddReqDto articleAddReqDto) {
@@ -39,6 +40,6 @@ public class ArticleService {
 
     public void deleteArticleById(Long id) {
         if (articleRepository.existsById(id)) articleRepository.deleteById(id);
-        else throw new IllegalArgumentException("Invalid article Id:" + id);
+        else throw new EntityNotFoundException("Article not found with id: " + id);
     }
 }

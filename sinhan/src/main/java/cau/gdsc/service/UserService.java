@@ -1,8 +1,9 @@
 package cau.gdsc.service;
 
 import cau.gdsc.domain.User;
-import cau.gdsc.dto.UserAddReqDto;
-import cau.gdsc.dto.UserUpdateReqDto;
+import cau.gdsc.dto.user.UserAddReqDto;
+import cau.gdsc.dto.user.UserResDto;
+import cau.gdsc.dto.user.UserUpdateReqDto;
 import cau.gdsc.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,29 +20,40 @@ public class UserService {
     private final UserRepository userRepository;
 //    private final UserMapper userMapper;
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserResDto> getUsers() {
+        return userRepository
+                .findAll()
+                .stream()
+                .map(UserResDto::of)
+                .collect(Collectors.toList());
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("No User"));
+    public UserResDto getUserById(Long id) {
+        User retrievedUser = findUserById(id);
+        return UserResDto.of(retrievedUser);
     }
 
     @Transactional
-    public User registerUser(UserAddReqDto reqDto) {
-        return userRepository.save(reqDto.toEntity());
+    public UserResDto registerUser(UserAddReqDto reqDto) {
+        User newUser = userRepository.save(reqDto.toEntity());
+        return UserResDto.of(newUser);
     }
 
     @Transactional // JPA dirty checking을 이용한 update
-    public User updateUser(Long id, UserUpdateReqDto reqDto){
-        User target = getUserById(id);
+    public UserResDto updateUser(Long id, UserUpdateReqDto reqDto){
+        User target = findUserById(id);
         target.update(reqDto.getHeight(), reqDto.getWeight());
-        return target;
+        return UserResDto.of(target);
     }
 
     @Transactional
     public void deleteUser(Long id) {
-        User target = getUserById(id);
+        User target = findUserById(id);
         userRepository.delete(target);
+    }
+
+    private User findUserById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found in id: " + id));
     }
 }

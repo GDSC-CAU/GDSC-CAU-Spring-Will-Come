@@ -1,5 +1,7 @@
 package cau.gdsc.dto.article;
 
+import cau.gdsc.domain.Article;
+import cau.gdsc.domain.User;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,4 +13,13 @@ import lombok.NoArgsConstructor;
 public class ArticleAddReqDto {
     private String title;
     private String content;
+    private User user;
+
+    public Article toEntity(){
+        return Article.builder()
+                .title(title)
+                .content(content)
+                .user(user)
+                .build();
+    }
 }

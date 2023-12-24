@@ -3,6 +3,7 @@ package cau.gdsc.controller;
 import cau.gdsc.config.api.ApiResponse;
 import cau.gdsc.domain.Article;
 import cau.gdsc.dto.article.ArticleAddReqDto;
+import cau.gdsc.dto.article.ArticleResDto;
 import cau.gdsc.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,32 +24,28 @@ public class ArticleController {
     }
 
     @GetMapping("/")
-    public ApiResponse<List<Article>> getArticles() {
+    public ApiResponse<List<ArticleResDto>> getArticles() {
         return ApiResponse.success(articleService.getArticles());
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<Article> getArticleById(@PathVariable Long id) {
+    public ApiResponse<ArticleResDto> getArticleById(@PathVariable Long id) {
         return ApiResponse.success(articleService.getArticleById(id));
     }
 
     @PostMapping("/")
-    public ResponseEntity<Article> createArticle(@RequestBody ArticleAddReqDto articleAddReqDto) {
-        return new ResponseEntity<>(articleService.createArticle(articleAddReqDto), HttpStatus.CREATED);
+    public ApiResponse<ArticleResDto> createArticle(@RequestBody ArticleAddReqDto articleAddReqDto) {
+        return ApiResponse.created(articleService.createArticle(articleAddReqDto));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody ArticleAddReqDto articleAddReqDto) {
-        return new ResponseEntity<>(articleService.updateArticle(id, articleAddReqDto), HttpStatus.OK);
+    public ApiResponse<ArticleResDto> updateArticle(@PathVariable Long id, @RequestBody ArticleAddReqDto articleAddReqDto) {
+        return ApiResponse.success(articleService.updateArticle(id, articleAddReqDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteArticleById(@PathVariable Long id) {
-        try {
-            articleService.deleteArticleById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ApiResponse<Void> deleteArticleById(@PathVariable Long id) {
+        articleService.deleteArticleById(id);
+        return ApiResponse.noContent();
     }
 }

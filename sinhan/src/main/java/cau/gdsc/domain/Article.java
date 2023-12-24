@@ -11,9 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder 사용을 위해 추가
 @Table(name = "article")
-@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class Article {
 
@@ -36,7 +34,15 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Article createArticle(String title, String content) {
-        return Article.builder().title(title).content(content).build();
+    @Builder
+    private Article (String title, String content, User user) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }

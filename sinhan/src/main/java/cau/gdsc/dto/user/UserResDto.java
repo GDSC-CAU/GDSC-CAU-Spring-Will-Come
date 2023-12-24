@@ -3,7 +3,7 @@ package cau.gdsc.dto.user;
 import cau.gdsc.domain.User;
 import lombok.*;
 
-@Getter
+@Getter // 테스트용 Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder

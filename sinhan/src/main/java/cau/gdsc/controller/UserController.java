@@ -1,5 +1,6 @@
 package cau.gdsc.controller;
 
+import cau.gdsc.config.api.ApiResponse;
 import cau.gdsc.domain.User;
 import cau.gdsc.dto.user.UserAddReqDto;
 import cau.gdsc.dto.user.UserResDto;
@@ -24,32 +25,28 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserResDto>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    public ApiResponse<List<UserResDto>> getUsers() {
+        return ApiResponse.success(userService.getUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResDto> getUserById(@PathVariable Long id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    public ApiResponse<UserResDto> getUserById(@PathVariable Long id) {
+        return ApiResponse.success(userService.getUserById(id));
     }
 
-    @PostMapping("/")
-    public ResponseEntity<UserResDto> registerUser(@RequestBody UserAddReqDto reqDto) {
-        return new ResponseEntity<>(userService.registerUser(reqDto), HttpStatus.CREATED);
+    @PostMapping("")
+    public ApiResponse<UserResDto> registerUser(@RequestBody UserAddReqDto reqDto) {
+        return ApiResponse.created(userService.registerUser(reqDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserResDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateReqDto reqDto) {
-        return new ResponseEntity<>(userService.updateUser(id, reqDto), HttpStatus.OK);
+    public ApiResponse<UserResDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateReqDto reqDto) {
+        return ApiResponse.success(userService.updateUser(id, reqDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        try {
-            userService.deleteUser(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ApiResponse<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ApiResponse.noContent();
     }
 }

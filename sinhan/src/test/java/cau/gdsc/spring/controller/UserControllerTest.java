@@ -1,6 +1,6 @@
 package cau.gdsc.spring.controller;
 
-import cau.gdsc.config.exception.GlobalExceptionHandler;
+import cau.gdsc.config.api.ResponseCode;
 import cau.gdsc.controller.UserController;
 import cau.gdsc.domain.User;
 import cau.gdsc.dto.user.UserAddReqDto;
@@ -14,22 +14,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -85,8 +80,8 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/user/{id}", user1.getId())
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is(user1.getName())));
+                .andExpect(jsonPath("$.header.code", is(ResponseCode.OK.getStatusCode())))
+                .andExpect(jsonPath("$.data.name", is(user1.getName())));
 
         mockMvc.perform(get("/user/{id}", WRONG_ID)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -110,8 +105,8 @@ public class UserControllerTest {
         mockMvc.perform(post("/user/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is(user1.getName())));
+                .andExpect(jsonPath("$.header.code", is(ResponseCode.CREATED.getStatusCode())))
+                .andExpect(jsonPath("$.data.name", is(user1.getName())));
 
         verify(userService).registerUser(any(UserAddReqDto.class));
     }
@@ -119,15 +114,15 @@ public class UserControllerTest {
     // 컨트롤러 응답이 정확한지에 대한 단위 테스트이므로 서비스 레이어의 테스트는 생략
     @Test
     @DisplayName(value = "사용자 정보 수정")
-    void updateUserInfo() throws Exception{
+    void updateUserInfo() throws Exception {
         UserUpdateReqDto reqDto = UserUpdateReqDto.builder()
                 .height(user1.getHeight() + 5)
                 .weight(user1.getWeight() + 5)
                 .build();
         when(userService.updateUser(eq(user1.getId()), any(UserUpdateReqDto.class))).thenReturn(UserResDto.of(user1)); //eq
         mockMvc.perform(put("/user/{id}", user1.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(reqDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(reqDto)))
                 .andExpect(status().isOk());
     }
 
@@ -139,10 +134,10 @@ public class UserControllerTest {
         doThrow(new EntityNotFoundException("No User")).when(userService).deleteUser(NON_EXISTED_ID);
 
         mockMvc.perform(delete("/user/{id}", user1.getId()))
-                .andExpect(status().isNoContent());
+                .andExpect(jsonPath("$.header.code", is(ResponseCode.NO_CONTENT.getStatusCode())));
 
         mockMvc.perform(delete("/user/{id}", NON_EXISTED_ID))
-                .andExpect(status().isNotFound());
+                .andExpect(jsonPath("$.header.code", is(ResponseCode.NOT_FOUND.getStatusCode())));
 
         verify(userService, times(2)).deleteUser(anyLong());
     }

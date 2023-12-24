@@ -12,7 +12,8 @@ public enum ResponseCode {
     OK(HttpStatus.OK, "OK"),
     CREATED(HttpStatus.CREATED, "CREATED"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "BAD_REQUEST"),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "NOT_FOUND");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "NOT_FOUND"),
+    NO_CONTENT(HttpStatus.NO_CONTENT, "NO_CONTENT");
 
     private final HttpStatus httpStatus;
     private final String message;

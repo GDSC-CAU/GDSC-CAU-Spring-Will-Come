@@ -13,13 +13,5 @@ import lombok.NoArgsConstructor;
 public class ArticleAddReqDto {
     private String title;
     private String content;
-    private User user;
-
-    public Article toEntity(){
-        return Article.builder()
-                .title(title)
-                .content(content)
-                .user(user)
-                .build();
-    }
+    private Long userId;
 }

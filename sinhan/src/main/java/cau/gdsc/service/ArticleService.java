@@ -3,9 +3,12 @@ package cau.gdsc.service;
 import cau.gdsc.config.api.ResponseCode;
 import cau.gdsc.config.exception.BaseException;
 import cau.gdsc.domain.Article;
+import cau.gdsc.domain.User;
 import cau.gdsc.dto.article.ArticleAddReqDto;
 import cau.gdsc.dto.article.ArticleResDto;
+import cau.gdsc.dto.article.ArticleUpdateReqDto;
 import cau.gdsc.repository.ArticleRepository;
+import cau.gdsc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ArticleService(ArticleRepository articleRepository) {
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository) {
+
         this.articleRepository = articleRepository;
+        this.userRepository = userRepository;
     }
 
     public List<ArticleResDto> getArticles() {
@@ -34,13 +40,32 @@ public class ArticleService {
         return ArticleResDto.of(findArticleById(id));
     }
 
+    public List<ArticleResDto> getArticlesByUserId(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+        return articleRepository
+                .findAllByUser(user)
+                .stream()
+                .map(ArticleResDto::of)
+                .collect(Collectors.toList());
+    }
+
     public ArticleResDto createArticle(ArticleAddReqDto articleAddReqDto) {
-        Article newArticle = articleRepository.save(articleAddReqDto.toEntity());
+        User user = userRepository.findById(articleAddReqDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + articleAddReqDto.getUserId()));
+
+        Article newArticle = Article
+                .builder()
+                .title(articleAddReqDto.getTitle())
+                .content(articleAddReqDto.getContent())
+                .user(user)
+                .build();
+        articleRepository.save(newArticle);
         return ArticleResDto.of(newArticle);
     }
 
-    public ArticleResDto updateArticle(Long id, ArticleAddReqDto reqDto) {
-        Article updatedArticle = findArticleById(id); // 존재 확인
+    public ArticleResDto updateArticle(ArticleUpdateReqDto reqDto) {
+        Article updatedArticle = findArticleById(reqDto.getArticleId()); // 존재 확인
         updatedArticle.update(reqDto.getTitle(), reqDto.getContent());
         return ArticleResDto.of(updatedArticle);
     }

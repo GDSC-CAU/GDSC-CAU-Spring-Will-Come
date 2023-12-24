@@ -4,6 +4,7 @@ import cau.gdsc.config.api.ApiResponse;
 import cau.gdsc.domain.Article;
 import cau.gdsc.dto.article.ArticleAddReqDto;
 import cau.gdsc.dto.article.ArticleResDto;
+import cau.gdsc.dto.article.ArticleUpdateReqDto;
 import cau.gdsc.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ApiResponse<List<ArticleResDto>> getArticles() {
         return ApiResponse.success(articleService.getArticles());
     }
@@ -33,14 +34,20 @@ public class ArticleController {
         return ApiResponse.success(articleService.getArticleById(id));
     }
 
-    @PostMapping("/")
+    // TODO: ID를 세션 또는 토큰으로 대체
+    @GetMapping("/user/{id}")
+    public ApiResponse<List<ArticleResDto>> getArticlesByUserId(@PathVariable Long id) {
+        return ApiResponse.success(articleService.getArticlesByUserId(id));
+    }
+
+    @PostMapping("")
     public ApiResponse<ArticleResDto> createArticle(@RequestBody ArticleAddReqDto articleAddReqDto) {
         return ApiResponse.created(articleService.createArticle(articleAddReqDto));
     }
 
-    @PatchMapping("/{id}")
-    public ApiResponse<ArticleResDto> updateArticle(@PathVariable Long id, @RequestBody ArticleAddReqDto articleAddReqDto) {
-        return ApiResponse.success(articleService.updateArticle(id, articleAddReqDto));
+    @PutMapping("")
+    public ApiResponse<ArticleResDto> updateArticle(@RequestBody ArticleUpdateReqDto reqDto) {
+        return ApiResponse.success(articleService.updateArticle(reqDto));
     }
 
     @DeleteMapping("/{id}")

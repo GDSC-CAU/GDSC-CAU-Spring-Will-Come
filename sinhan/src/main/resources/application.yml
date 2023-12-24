@@ -1,4 +1,7 @@
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher # Swagger 설정을 위한 설정
   profiles:
     active: "dev"
   jpa:

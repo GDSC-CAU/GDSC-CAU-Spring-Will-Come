@@ -116,11 +116,12 @@ public class UserControllerTest {
     @DisplayName(value = "사용자 정보 수정")
     void updateUserInfo() throws Exception {
         UserUpdateReqDto reqDto = UserUpdateReqDto.builder()
+                .userId(user1.getId())
                 .height(user1.getHeight() + 5)
                 .weight(user1.getWeight() + 5)
                 .build();
-        when(userService.updateUser(eq(user1.getId()), any(UserUpdateReqDto.class))).thenReturn(UserResDto.of(user1)); //eq
-        mockMvc.perform(put("/user/{id}", user1.getId())
+        when(userService.updateUser(any(UserUpdateReqDto.class))).thenReturn(UserResDto.of(user1)); //eq
+        mockMvc.perform(put("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto)))
                 .andExpect(status().isOk());

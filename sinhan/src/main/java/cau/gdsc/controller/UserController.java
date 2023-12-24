@@ -2,6 +2,7 @@ package cau.gdsc.controller;
 
 import cau.gdsc.config.api.ApiResponse;
 import cau.gdsc.domain.User;
+import cau.gdsc.dto.article.ArticleResDto;
 import cau.gdsc.dto.user.UserAddReqDto;
 import cau.gdsc.dto.user.UserResDto;
 import cau.gdsc.dto.user.UserUpdateReqDto;
@@ -39,9 +40,9 @@ public class UserController {
         return ApiResponse.created(userService.registerUser(reqDto));
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<UserResDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateReqDto reqDto) {
-        return ApiResponse.success(userService.updateUser(id, reqDto));
+    @PutMapping("")
+    public ApiResponse<UserResDto> updateUser(@RequestBody UserUpdateReqDto reqDto) {
+        return ApiResponse.success(userService.updateUser(reqDto));
     }
 
     @DeleteMapping("/{id}")

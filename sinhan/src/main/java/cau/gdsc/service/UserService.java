@@ -40,8 +40,8 @@ public class UserService {
     }
 
     @Transactional // JPA dirty checking을 이용한 update
-    public UserResDto updateUser(Long id, UserUpdateReqDto reqDto){
-        User target = findUserById(id);
+    public UserResDto updateUser(UserUpdateReqDto reqDto){
+        User target = findUserById(reqDto.getUserId());
         target.update(reqDto.getHeight(), reqDto.getWeight());
         return UserResDto.of(target);
     }

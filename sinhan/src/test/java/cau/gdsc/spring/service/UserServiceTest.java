@@ -104,10 +104,11 @@ public class UserServiceTest {
         UserUpdateReqDto reqDto = UserUpdateReqDto.builder()
                 .height(user1.getHeight() + 5)
                 .weight(user1.getWeight() + 5)
+                .userId(user1.getId())
                 .build();
         when(userRepository.findById(anyLong())).thenReturn((Optional.of(user1)));
 
-        UserResDto updatedUser = userService.updateUser(user1.getId(), reqDto);
+        UserResDto updatedUser = userService.updateUser(reqDto);
 
         assertThat(updatedUser.getHeight()).isEqualTo(user1.getHeight());
         assertThat(updatedUser.getWeight()).isEqualTo(user1.getWeight());

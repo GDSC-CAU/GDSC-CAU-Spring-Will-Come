@@ -9,4 +9,5 @@ import lombok.*;
 public class UserUpdateReqDto {
     private int height;
     private int weight;
+    private Long userId;
 }

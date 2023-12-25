@@ -67,7 +67,6 @@ public class UserServiceTest {
     @Test
     @DisplayName(value = "특정 사용자 조회")
     void getUser() {
-        // 어떤 Long 값을 넣드
         when(userRepository.findById(user1.getId())).thenReturn(Optional.of(user1));
 
         UserResDto retrievedUser = userService.getUserById(user1.getId());
@@ -90,6 +89,7 @@ public class UserServiceTest {
                 .gender(0)
                 .age(30)
                 .build();
+        // 어떤 User 엔티티를 save하더라도 user1을 반환하도록 정의
         when(userRepository.save(any(User.class))).thenReturn(user1);
 
         UserResDto createdUser = userService.registerUser(reqDto);

@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// MVC 관련 컴포넌트(컨트롤러, 필터, 컨버터 등)만 스캔 후 테스트
+// MVC 관련 컴포넌트(컨트롤러, 필터, 컨버터, ControllerAdvice 등)만 스캔 후 테스트
 @WebMvcTest({UserController.class})
 @AutoConfigureDataJpa // EnableAuditing 사용시 이 어노테이션을 추가해야함
 public class UserControllerTest {
@@ -67,8 +67,8 @@ public class UserControllerTest {
         when(userService.getUsers()).thenReturn(users);
 
         mockMvc.perform(get("/user"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()", is(users.size())));
+                .andExpect(jsonPath("$.header.code", is(200)))
+                .andExpect(jsonPath("$.size()", is(users.size()))); // Response body 확인
     }
 
     @Test
@@ -83,9 +83,10 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.header.code", is(ResponseCode.OK.getStatusCode())))
                 .andExpect(jsonPath("$.data.name", is(user1.getName())));
 
+        // 예외 처리 테스트
         mockMvc.perform(get("/user/{id}", WRONG_ID)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.header.code", is(404)))
                 .andExpect(result ->
                         Assertions.assertTrue(result.getResolvedException() instanceof EntityNotFoundException));
     }
@@ -131,6 +132,7 @@ public class UserControllerTest {
     @DisplayName(value = "사용자 삭제")
     void deleteUser() throws Exception {
         final Long NON_EXISTED_ID = 100L;
+        // 반환값이 없는 로직에 대한 stub 정의
         doNothing().when(userService).deleteUser(user1.getId());
         doThrow(new EntityNotFoundException("No User")).when(userService).deleteUser(NON_EXISTED_ID);
 

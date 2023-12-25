@@ -26,6 +26,14 @@ public class ApiResponse<T> {
         return new ApiResponse<>(new ApiHeader(ResponseCode.NO_CONTENT.getStatusCode(), ResponseCode.NO_CONTENT.getMessage()), null);
     }
 
+    public static <T> ApiResponse<T> created(T data){
+        return new ApiResponse<T>(new ApiHeader(ResponseCode.CREATED.getStatusCode(), ResponseCode.CREATED.getMessage()), data);
+    }
+
+    public static ApiResponse<Void> noContent(){
+        return new ApiResponse<Void>(new ApiHeader(ResponseCode.NO_CONTENT.getStatusCode(), ResponseCode.NO_CONTENT.getMessage()), null);
+    }
+
     public static <T> ApiResponse<T> fail(ResponseCode responseCode, T data) {
         return new ApiResponse<>(new ApiHeader(responseCode.getStatusCode(), responseCode.getMessage()), data);
     }

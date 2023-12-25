@@ -21,7 +21,7 @@ public class Article {
     private Long id;
     private String title;
     private String content;
-    // columnDefinition == DDL => DB에 직접 등록해도 자동 생성하도록 설정
+    // columnDefinition == DDL => DB에서 직접 등록(MySQL Workbench)해도 timestamp 자동 생성하도록 설정
     // CreatedDate를 통해 JPA가 INSERT를 할때 값을 자동으로 추가
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

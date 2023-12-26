@@ -24,4 +24,11 @@ public class GlobalExceptionHandler {
                 .status(404)
                 .body(ApiResponse.fail(ResponseCode.NOT_FOUND, e.getMessage()));
     }
+    
+    @ExceptionHandler(AuthException.class) // 인증 관련 에러
+    public ResponseEntity<ApiResponse<String>> handleAuthException(AuthException e){
+        return ResponseEntity
+                .status(e.getResponseCode().getHttpStatus())
+                .body(ApiResponse.fail(e.getResponseCode(), e.getMessage()));
+    }
 }

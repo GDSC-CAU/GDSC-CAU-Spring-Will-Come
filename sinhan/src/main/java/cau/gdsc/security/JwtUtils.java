@@ -28,7 +28,6 @@ public class JwtUtils {
         return claimsResolver.apply(claims);
     }
 
-    // TODO: 엔티티를 UserDetails로 사용할 수 있는지 조사
     public String generateToken(UserDetails userDetails) {
         return generateToken(Map.of(), userDetails);
     }

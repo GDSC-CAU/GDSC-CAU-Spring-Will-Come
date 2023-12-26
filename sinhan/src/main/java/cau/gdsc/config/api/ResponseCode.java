@@ -13,7 +13,9 @@ public enum ResponseCode {
     CREATED(HttpStatus.CREATED, "CREATED"),
     NO_CONTENT(HttpStatus.NO_CONTENT, "NO_CONTENT"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "BAD_REQUEST"),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "NOT_FOUND");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "NOT_FOUND"),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED"),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "FORBIDDEN");
 
     private final HttpStatus httpStatus;
     private final String message;

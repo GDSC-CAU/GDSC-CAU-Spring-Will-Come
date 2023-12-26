@@ -1,5 +1,7 @@
 package cau.gdsc.service;
 
+import cau.gdsc.config.api.ResponseCode;
+import cau.gdsc.config.exception.AuthException;
 import cau.gdsc.domain.User;
 import cau.gdsc.dto.auth.AuthReqDto;
 import cau.gdsc.dto.auth.AuthResDto;
@@ -27,7 +29,8 @@ public class AuthService {
     // UserController에서 회원 등록을 관리했지만
     // 인증 시스템이 생기면서 이를 분리하게 되었다. 이에 따른 DTO도 개편
     public AuthResDto register(RegisterReqDto reqDto) {
-        if (userRepository.existsByEmail(reqDto.getEmail())) throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        if (userRepository.existsByEmail(reqDto.getEmail()))
+            throw new AuthException(ResponseCode.UNAUTHORIZED, "이미 존재하는 이메일입니다.");
         User newUser = userRepository.save(reqDto.toEntity(passwordEncoder));
 
         // 등록 완료 후 토큰 반환
@@ -40,9 +43,10 @@ public class AuthService {
                 reqDto.getEmail(),
                 reqDto.getPassword()
         )); // auth manager가 인증 및 예외 처리를 모두 담당
+
         User user = userRepository
                 .findByEmail(reqDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new AuthException(ResponseCode.UNAUTHORIZED, "존재하지 않는 이메일입니다."));
 
         String token = jwtUtils.generateToken((UserDetails) user);
         return AuthResDto.of(token);

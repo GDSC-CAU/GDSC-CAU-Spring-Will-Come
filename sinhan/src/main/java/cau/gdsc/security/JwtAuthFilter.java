@@ -46,11 +46,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // 아직 회원이 인증되지 않았을 때 SecurityContext에 인증 정보를 저장
         if (email != null || SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email); // DB에서 사용자 정보를 가져옴
+            // 회원의 JWT 토큰이 유효하면 SecurityContext에 인증 정보를 저장
             if (jwtUtils.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
-                        null,
+                        null, // ?
                         userDetails.getAuthorities()
                 );
                 authToken.setDetails(

@@ -1,8 +1,11 @@
-package cau.gdsc.config.security;
+package cau.gdsc.security;
 
-import cau.gdsc.service.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,7 +19,9 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
+
+    private final UserDetailsService userDetailsService;
 
     // 요청 헤더의 Authorization 필드에 담긴 JWT 토근을 추출하여 검증
     // 검증 방식: UserDetailsService를 통해 DB에서 사용자 정보를 가져온 후, JWT 토큰의 유효성을 검증
@@ -31,15 +36,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String token;
 
         // 요청 헤더에 Authorization 필드가 없거나, Bearer로 시작하지 않으면 필터링을 수행하지 않음
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response); // 다음 필터로 넘어감
             return;
         }
 
         token = authHeader.substring(7);
-        email = jwtService.extractUsername(token);
+        email = jwtUtils.extractUsername(token);
 
+        // 아직 회원이 인증되지 않았을 때 SecurityContext에 인증 정보를 저장
         if (email != null || SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            if (jwtUtils.isTokenValid(token, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
+        filterChain.doFilter(request, response);
     }
 }

@@ -21,6 +21,7 @@ public class User {
     private int gender;
     private int age;
     private String email;
+    private String password;
 
     // 필요한 정보만 값을 넣을 수 있도록
     @Builder

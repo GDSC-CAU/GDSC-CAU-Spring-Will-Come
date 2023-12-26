@@ -1,7 +1,6 @@
 package cau.gdsc.spring.service;
 
 import cau.gdsc.domain.User;
-import cau.gdsc.dto.user.UserAddReqDto;
 import cau.gdsc.dto.user.UserResDto;
 import cau.gdsc.dto.user.UserUpdateReqDto;
 import cau.gdsc.repository.UserRepository;
@@ -79,24 +78,24 @@ public class UserServiceTest {
                 .hasMessageContaining("User not found in id: 10");
     }
 
-    @Test
-    @DisplayName(value = "사용자 등록")
-    void registerUser() {
-        UserAddReqDto reqDto = UserAddReqDto.builder()
-                .name("NEW USER")
-                .height(160)
-                .weight(60)
-                .gender(0)
-                .age(30)
-                .build();
-        // 어떤 User 엔티티를 save하더라도 user1을 반환하도록 정의
-        when(userRepository.save(any(User.class))).thenReturn(user1);
-
-        UserResDto createdUser = userService.registerUser(reqDto);
-
-        assertThat(createdUser).isNotNull();
-        assertThat(createdUser.getName()).isEqualTo(user1.getName());
-    }
+//    @Test
+//    @DisplayName(value = "사용자 등록")
+//    void registerUser() {
+//        UserAddReqDto reqDto = UserAddReqDto.builder()
+//                .name("NEW USER")
+//                .height(160)
+//                .weight(60)
+//                .gender(0)
+//                .age(30)
+//                .build();
+//        // 어떤 User 엔티티를 save하더라도 user1을 반환하도록 정의
+//        when(userRepository.save(any(User.class))).thenReturn(user1);
+//
+//        UserResDto createdUser = userService.registerUser(reqDto);
+//
+//        assertThat(createdUser).isNotNull();
+//        assertThat(createdUser.getName()).isEqualTo(user1.getName());
+//    }
 
     @Test
     @DisplayName(value = "사용자 정보 변경")

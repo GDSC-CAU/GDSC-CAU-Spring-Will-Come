@@ -25,13 +25,14 @@ public class User {
 
     // 필요한 정보만 값을 넣을 수 있도록
     @Builder
-    private User(String name, int height, int weight, int gender, int age, String email) {
+    private User(String name, int height, int weight, int gender, int age, String email, String password) {
         this.name = name;
         this.height = height;
         this.weight = weight;
         this.gender = gender;
         this.age = age;
         this.email = email;
+        this.password = password;
     }
 
     // 필요한 update 정보만 받아와 수정

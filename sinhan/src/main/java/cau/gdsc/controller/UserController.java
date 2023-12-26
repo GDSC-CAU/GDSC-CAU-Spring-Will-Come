@@ -3,7 +3,6 @@ package cau.gdsc.controller;
 import cau.gdsc.config.api.ApiResponse;
 import cau.gdsc.domain.User;
 import cau.gdsc.dto.article.ArticleResDto;
-import cau.gdsc.dto.user.UserAddReqDto;
 import cau.gdsc.dto.user.UserResDto;
 import cau.gdsc.dto.user.UserUpdateReqDto;
 import cau.gdsc.service.UserService;
@@ -40,11 +39,11 @@ public class UserController {
         return ApiResponse.success(userService.getUserById(id));
     }
 
-    @ApiOperation(value = "회원 등록")
-    @PostMapping("")
-    public ApiResponse<UserResDto> registerUser(@RequestBody UserAddReqDto reqDto) {
-        return ApiResponse.created(userService.registerUser(reqDto));
-    }
+//    @ApiOperation(value = "회원 등록")
+//    @PostMapping("")
+//    public ApiResponse<UserResDto> registerUser(@RequestBody UserAddReqDto reqDto) {
+//        return ApiResponse.created(userService.registerUser(reqDto));
+//    }
 
     @ApiOperation(value = "회원 수정")
     @PutMapping("")

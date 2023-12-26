@@ -1,7 +1,6 @@
 package cau.gdsc.service;
 
 import cau.gdsc.domain.User;
-import cau.gdsc.dto.user.UserAddReqDto;
 import cau.gdsc.dto.user.UserResDto;
 import cau.gdsc.dto.user.UserUpdateReqDto;
 import cau.gdsc.repository.UserRepository;
@@ -33,11 +32,11 @@ public class UserService {
         return UserResDto.of(retrievedUser);
     }
 
-    @Transactional
-    public UserResDto registerUser(UserAddReqDto reqDto) {
-        User newUser = userRepository.save(reqDto.toEntity());
-        return UserResDto.of(newUser);
-    }
+//    @Transactional
+//    public UserResDto registerUser(UserAddReqDto reqDto) {
+//        User newUser = userRepository.save(reqDto.toEntity());
+//        return UserResDto.of(newUser);
+//    }
 
     @Transactional // JPA dirty checking을 이용한 update
     public UserResDto updateUser(UserUpdateReqDto reqDto){

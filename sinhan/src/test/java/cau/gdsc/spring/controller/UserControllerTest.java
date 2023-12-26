@@ -3,7 +3,6 @@ package cau.gdsc.spring.controller;
 import cau.gdsc.config.api.ResponseCode;
 import cau.gdsc.controller.UserController;
 import cau.gdsc.domain.User;
-import cau.gdsc.dto.user.UserAddReqDto;
 import cau.gdsc.dto.user.UserResDto;
 import cau.gdsc.dto.user.UserUpdateReqDto;
 import cau.gdsc.service.UserService;
@@ -91,26 +90,26 @@ public class UserControllerTest {
                         Assertions.assertTrue(result.getResolvedException() instanceof EntityNotFoundException));
     }
 
-    @Test
-    @DisplayName(value = "사용자 등록")
-    void registerUser() throws Exception {
-        UserAddReqDto reqDto = UserAddReqDto.builder()
-                .name(user1.getName())
-                .weight(user1.getWeight())
-                .height(user1.getHeight())
-                .gender(user1.getGender())
-                .age(user1.getAge())
-                .build();
-        when(userService.registerUser(any(UserAddReqDto.class))).thenReturn(UserResDto.of(user1));
-
-        mockMvc.perform(post("/user/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(reqDto)))
-                .andExpect(jsonPath("$.header.code", is(ResponseCode.CREATED.getStatusCode())))
-                .andExpect(jsonPath("$.data.name", is(user1.getName())));
-
-        verify(userService).registerUser(any(UserAddReqDto.class));
-    }
+//    @Test
+//    @DisplayName(value = "사용자 등록")
+//    void registerUser() throws Exception {
+//        UserAddReqDto reqDto = UserAddReqDto.builder()
+//                .name(user1.getName())
+//                .weight(user1.getWeight())
+//                .height(user1.getHeight())
+//                .gender(user1.getGender())
+//                .age(user1.getAge())
+//                .build();
+//        when(userService.registerUser(any(UserAddReqDto.class))).thenReturn(UserResDto.of(user1));
+//
+//        mockMvc.perform(post("/user/")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(reqDto)))
+//                .andExpect(jsonPath("$.header.code", is(ResponseCode.CREATED.getStatusCode())))
+//                .andExpect(jsonPath("$.data.name", is(user1.getName())));
+//
+//        verify(userService).registerUser(any(UserAddReqDto.class));
+//    }
 
     // 컨트롤러 응답이 정확한지에 대한 단위 테스트이므로 서비스 레이어의 테스트는 생략
     @Test

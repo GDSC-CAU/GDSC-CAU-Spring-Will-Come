@@ -13,7 +13,7 @@ logging:
     root: info
 ---
 jwt:
-  secret-key: 1fa0dab38c1f4cf954adf5bdf08cab2461d831e991567880f6a4b4cd5be14aeb // JWT 암호화 키
+  secret-key: 1fa0dab38c1f4cf954adf5bdf08cab2461d831e991567880f6a4b4cd5be14aeb # JWT 암호화 키
 spring:
   config:
     activate:

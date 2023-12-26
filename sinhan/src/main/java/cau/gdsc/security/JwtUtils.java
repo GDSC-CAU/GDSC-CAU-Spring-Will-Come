@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtUtils {
     @Value("${jwt.secret-key}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY; // @Value는 정적 필드에 적용되지 않는다. -> 인스턴스 필드로 설정
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

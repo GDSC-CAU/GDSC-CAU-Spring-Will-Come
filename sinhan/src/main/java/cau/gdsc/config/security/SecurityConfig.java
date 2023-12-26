@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity // Spring Security 설정을 활성화
 @RequiredArgsConstructor
@@ -22,9 +23,9 @@ public class SecurityConfig {
                 .csrf()
                 .disable() // CSRF 공격 방지 기능 비활성화. CSRF는 Cross-Site Request Forgery의 약자로, 웹 사이트의 취약점을 이용하여 사용자가 의도하지 않은 요청을 통해 공격하는 방식
                 .authorizeHttpRequests()
-                .requestMatchers()
+                .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**")) // 회원가입은 해야하니까 auth는 허용
                 .permitAll()
-                .anyRequest()
+                .anyRequest() // 그 외 요청은 인증 요구
                 .authenticated()
                 .and()
                 .sessionManagement()

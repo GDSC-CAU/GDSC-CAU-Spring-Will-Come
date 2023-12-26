@@ -17,7 +17,7 @@ public class UserAddReqDto {
     private int height;
     @ApiModelProperty(value = "몸무게", example = "75", required = true)
     private int weight;
-    @ApiModelProperty(value = "성별", example = "0: 남성, 1: 여성", required = true)
+    @ApiModelProperty(value = "성별(0: 남성, 1: 여성)", example = "0", required = true)
     private int gender;
     @ApiModelProperty(value = "나이", example = "30", required = true)
     private int age;

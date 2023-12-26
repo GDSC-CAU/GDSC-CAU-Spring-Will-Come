@@ -19,7 +19,7 @@ public class UserResDto {
     private int height;
     @ApiModelProperty(value = "몸무게")
     private int weight;
-    @ApiModelProperty(value = "성별", example = "0: 남자, 1: 여자")
+    @ApiModelProperty(value = "성별(0: 남자, 1: 여자)", example = "0")
     private int gender;
     @ApiModelProperty(value = "나이")
     private int age;

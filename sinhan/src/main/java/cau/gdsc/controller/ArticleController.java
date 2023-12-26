@@ -14,7 +14,7 @@ import java.util.List;
 
 @Api(tags = {"Article"}, value = "게시글 API")
 @RestController
-@RequestMapping("/article")
+@RequestMapping("/api/v1/article")
 public class ArticleController {
     private final ArticleService articleService;
 

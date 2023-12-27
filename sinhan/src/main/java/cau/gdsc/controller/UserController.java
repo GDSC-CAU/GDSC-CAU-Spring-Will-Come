@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-@Api(tags = {"User"}, value = "회원 API")
+@Api(tags = {"회원"}, value = "회원 API")
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {

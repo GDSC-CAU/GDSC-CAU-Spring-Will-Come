@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 // OncePerRequestFilter: 요청이 들어올 때마다 필터링을 수행
+// 이 필터는 회원가입이나 로그인 요청에서 동작하지 않는다. (SecurityConfig 참조)
+// 이 필터는 이미 가입한 사용자가 인증이 요구되는 엔드포인트에 진입했을때 JWT 토큰 인증을 수행한다. 즉, email과 만료기간을 검증한다.
+// 따라서, UsernamePasswordAuthenticationToken에 비밀번호가 필요하지 않다.
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -44,20 +47,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         token = authHeader.substring(7);
         email = jwtUtils.extractUsername(token);
 
-        // 아직 회원이 인증되지 않았을 때 SecurityContext에 인증 정보를 저장
+        // 아직 '인증'되지 않았을 때 토큰 검증 후 SecurityContext에 인증 정보를 저장
+        // SecurityContext는 요청이 응답될 때까지 유지되는 인증 정보 저장소, 즉, 매 요청마다 초기화된다.
+        // SecurityContextHolder는 각 쓰레드(요청)에서 관리하는 SecurityContext를 담고 있는 저장소이다.
         if (email != null || SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email); // DB에서 사용자 정보를 가져옴
             // 회원의 JWT 토큰이 유효하면 SecurityContext에 인증 정보를 저장
             if (jwtUtils.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null, // ?
-                        userDetails.getAuthorities()
+                        userDetails, // Principal: 인증된 사용자 객체
+                        null, // Credentials: 인증된 사용자의 비밀번호, 이미 회원가입때 인증됐기 때문에 필요 없음
+                        userDetails.getAuthorities() // Authorities: 인증된 사용자의 권한
                 );
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                ); // 토큰에 세부 정보 기록
+                SecurityContextHolder.getContext().setAuthentication(authToken); // SecurityContext에 인증 정보 저장
             }
         }
         filterChain.doFilter(request, response);

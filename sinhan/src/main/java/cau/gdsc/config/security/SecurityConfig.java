@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf() // CSRF 공격 방지 기능 비활성화. CSRF는 Cross-Site Request Forgery의 약자로, 웹 사이트의 취약점을 이용하여 사용자가 의도하지 않은 요청을 통해 공격하는 방식
                 .disable() // CSRF 공격은 세션 기반의 인증에서 주로 발생하므로, REST API에서는 비활성화해도 좋다.
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll() // 회원가입은 해야하니까 auth는 허용
+                        .requestMatchers(new AntPathRequestMatcher("/api/v1/auth/**")).permitAll() // 인증 관련
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll() // Swagger 관련
                         .requestMatchers(new AntPathRequestMatcher("/swagger-resources/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/v2/api-docs")).permitAll()

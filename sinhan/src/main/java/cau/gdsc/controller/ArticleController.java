@@ -35,12 +35,11 @@ public class ArticleController {
         return ApiResponse.success(articleService.getArticleById(id));
     }
 
-    // TODO: ID를 세션 또는 토큰으로 대체
-//    @ApiOperation(value = "특정 사용자 게시글 목록 조회")
-//    @GetMapping("/user/{id}")
-//    public ApiResponse<List<ArticleResDto>> getArticlesByUserId(@PathVariable Long id) {
-//        return ApiResponse.success(articleService.getArticlesByUserId(id));
-//    }
+    @ApiOperation(value = "특정 사용자 게시글 목록 조회")
+    @GetMapping("/user/{id}")
+    public ApiResponse<List<ArticleResDto>> getArticlesByUserId(@PathVariable Long id) {
+        return ApiResponse.success(articleService.getArticlesByUserId(id));
+    }
 
     @ApiOperation(value = "게시글 생성")
     @PostMapping("")

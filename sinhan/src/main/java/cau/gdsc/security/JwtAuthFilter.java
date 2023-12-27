@@ -39,6 +39,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String token;
 
         // 요청 헤더에 Authorization 필드가 없거나, Bearer로 시작하지 않으면 필터링을 수행하지 않음
+        // jwt 토큰 형식이 아니면 다음 필터로 넘어가게된다.
+        // SecurityConfig의 체인에 의해 인증 정보가 authenticated 상태여야 요청이 처리된다.(즉, DispatcherServlet이 호출된다.)
+        // 요청 헤더 인증 정보가 jwt 토큰 형식이 아니면 결국 요청 거부된다.(AccessDeniedHandler)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response); // 다음 필터로 넘어감
             return;
@@ -57,7 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails, // Principal: 인증된 사용자 객체
                         null, // Credentials: 인증된 사용자의 비밀번호, 이미 회원가입때 인증됐기 때문에 필요 없음
-                        userDetails.getAuthorities() // Authorities: 인증된 사용자의 권한
+                        userDetails.getAuthorities() // Authorities: 인증된 사용자의 권한. Authorities가 null이 아니면 인증된 사용자로 간주
                 );
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)

@@ -11,12 +11,14 @@ import cau.gdsc.repository.ArticleRepository;
 import cau.gdsc.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
@@ -50,6 +52,7 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public ArticleResDto createArticle(ArticleAddReqDto articleAddReqDto) {
         User user = userRepository.findById(articleAddReqDto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + articleAddReqDto.getUserId()));
@@ -64,12 +67,14 @@ public class ArticleService {
         return ArticleResDto.of(newArticle);
     }
 
+    @Transactional
     public ArticleResDto updateArticle(ArticleUpdateReqDto reqDto) {
         Article updatedArticle = findArticleById(reqDto.getArticleId()); // 존재 확인
         updatedArticle.update(reqDto.getTitle(), reqDto.getContent());
         return ArticleResDto.of(updatedArticle);
     }
 
+    @Transactional
     public void deleteArticleById(Long id) {
         Article target = findArticleById(id);
         articleRepository.delete(target);

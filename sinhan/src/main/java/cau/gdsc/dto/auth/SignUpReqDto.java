@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RegisterReqDto {
+public class SignUpReqDto {
     @ApiModelProperty(value = "회원 이름", example = "홍길동", required = true)
     private String name;
     @ApiModelProperty(value = "키", example = "175", required = true)

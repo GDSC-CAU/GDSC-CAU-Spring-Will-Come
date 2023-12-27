@@ -63,7 +63,7 @@ public class User implements UserDetails { // 스프링 시큐리티 UserDetails
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return true; // 계정 만료 여부
     }
 
     @Override

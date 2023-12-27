@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@Deprecated
 public class UserAddReqDto {
     @ApiModelProperty(value = "회원 이름", example = "홍길동", required = true)
     private String name;
